@@ -1,0 +1,14 @@
+- name: Download and extract file
+  hosts: all
+  become: yes
+  tasks:
+    - name: Download tar.gz file
+      get_url:
+        url: https://example.com/file.tar.gz
+        dest: /tmp/file.tar.gz
+
+    - name: Extract tar.gz file
+      unarchive:
+        src: /tmp/file.tar.gz
+        dest: /opt
+        remote_src: yes

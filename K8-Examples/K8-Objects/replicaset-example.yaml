@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-ReplicaSet #Identifies the Replicaset name
+spec:
+  replicas: 3 # No of pods desired
+  selector: 
+    matchlabels: # using match labels the replicas get binds to template for identificaation
+      app: myapp #Identifies the key: name name mentioned in template
+    template:
+      metadata: 
+        labels:
+          app: myapp # labels → key:value → app: myapp
+      spec:
+        containers:
+          - name: front-container
+            image: node-app:12
+            ports:
+             - containerPort: 8080

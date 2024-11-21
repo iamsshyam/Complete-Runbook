@@ -1,0 +1,21 @@
+# Ensure a Service is Running with a Health Check
+
+- name: Ensure Apache service is running and healthy
+  hosts: web_servers
+  become: yes
+
+  tasks:
+    - name: Start and enable Apache
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Check if Apache service is healthy
+      uri:
+        url: http://localhost
+        status_code: 200
+      register: apache_health_check
+      retries: 5
+      delay: 3
+      until: apache_health_check.status == 200

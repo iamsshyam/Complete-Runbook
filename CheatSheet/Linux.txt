@@ -1,0 +1,259 @@
+MAN - Manual page
+
+Navigation :
+
+H = help 
+q = to quit
+j  scroll down 
+k = scroll up 
+crtl+F = pagination down
+crtl+B = pagination forward
+g = top line
+Shift+G = last line
+/"pattern" = search in pattern => ex: /Display for next result press key n/ previous result shft+N
+?"pattern" = search in reverse => ex: /Display for next result press key n/ previous result shft+N
+
+bold text = Type as is bold text 
+italic text = replace with appropriate argument
+[-abc] = optional
+-a | -b = it is Or condition
+argument... =one or more ex :ls [OPTION]... [FILE]...
+[exp]... = one or more ex :ls [OPTION]... [FILE]...
+
+man man-pages = create a man page
+help for builtin commands ex: help while
+
+/bin Binaries and other executable programs. /etc System configuration files.
+/home Homedirectories.
+/opt Optional or third party software.
+/tmp Temporary space, typically cleared on reboot. /usr User related programs.
+/var Variable data, most notably log files.
+
+man = manual of all command
+man <command> =  list of all details of specified command = man ls
+
+whoami =  provide user name
+
+sudo -i =  login as root 
+
+tty = prints the filename of terminal from where it takes standard input
+
+adduser= add user in system (user name and password ..) #useradd is a internal perl command for adduser
+
+id = userinfo - uid, gip, added group (real group and effective group)
+    -a     ignore, for compatibility with other versions
+
+    -Z, --context
+            print only the security context of the process
+
+    -g, --group
+            print only the effective group ID (associated with the user effective group id)
+
+    -G, --groups
+            print all group IDs (user associated with the other groups)
+
+    -n, --name
+            print a name instead of a number, for -ugG
+    -u, --user
+            print only the effective user ID
+
+users =  current logged in users
+
+groups = effective groups ids
+
+
+sudo groupadd groupname = create a group 
+delgroup <group-name>= delete group
+
+su <username> = switch user = su root
+
+usermod modify user modifications
+usermod -c "This is test user" test_user = Add comment to user and save in /etc/passwd
+usermod -L test_user = lock user
+usermod -U test_user = unloack user 
+usermod -a -G sudo <username> = append into the sudo group = [usermod -a -G sudo jimishra sudo] [usermod -a -G group1,group2 username]
+
+passwd = change the password for current user
+sudo passwd <username> = change the password for given user
+
+uname = prints kernel name
+uname -r =kernel release
+uname -v = version on kernel 
+uname -m = which machine
+uname -o = os release
+uname -a = all details of kernel
+ 
+ls =list the content of directory
+ls -<directory> = list the content for document folder = ls Document
+ls ~ = home directory 
+ls .. = list the previous directory content 
+ls -l = list in long format 
+ls -al = long list with hidden files 
+ls -lS = sort with file size
+ls <directory>/* = using asterik for list using regex [ ls *.txt ]
+ls > <file> = output of ls is addded to file [ ls > output.txt]
+ls -lh = size of files
+-i, --inode
+    print the index number of each file
+
+-I, --ignore=PATTERN
+    do not list implied entries matching shell PATTERN
+
+--color[=WHEN]
+        colorize the output; WHEN can be 'always' (default if omitted), 'auto', or 'never'; more info below
+-r, --reverse
+        reverse order while sorting
+
+-R, --recursive
+        list subdirectories recursively
+
+cat =  open the file 
+cat -b = add number to non-blank line
+cat -n = add number to all line 
+cat -s = segregating all blankspaces to one 
+
+date = current date 
+date +%d = day of month 
+date +%a = day of week
+date +%b = month 
+date +%D = current date
+sudo date -s yyyy-mm-dd hh:mm:ss = change the date of system
+
+cal = calendar 
+
+pwd = present working directory 
+
+touch = create blank file & change the timestamps of file created/ modified
+touch -a <dateformat> = modify date 
+
+bc =  calculator for all maths 
+
+head =  list the data of file from start
+head -10 = only starting 10 lines
+
+tail = list the data from bottom 
+tail -10 =only bottom 10 lines 
+
+wc <file-name> = word count of file 
+wc -l =  lines of file
+wc -c = character of file
+wc -w = word of file 
+
+cut = cut out selected portions of each line of a file 
+
+file filename = provides file type [file abc.txt]
+
+sort <filename> = sort in ascending order
+
+0 = stdin standard input
+1 = stdout standard output 
+2 = stderr standard Error
+
+> = redirect to a file 
+< = takes input
+
+| =  output of one command will be input for another command 
+
+more = scorll down
+less = scroll up & down
+
+uniq =  gets the unique element of file 
+
+mkdir  = make directory
+mkdir -p =  Create intermediate directories as required. example = mkdir -p ./ {a/{a1,a2,a3},b/{b1,b2,b3}} {name1/{a,b,c},name2/{p,q,r}}
+
+rm filename = remove file
+rm -rf = remove file recursivesly 
+rm -rvf = remove file recursivesly verbose
+
+Link ln 
+
+sed 's/<oldWord>/<newWord>/'  = t is used to edit files using a regular expression.
+find . -name "*.pdf"  
+
+tee = cat + save output in a file
+command | grep <searchWord>  =  cat abc.txt | grep "a*"
+
+network manager 
+nmcli
+
+partitions in linux cat /proc/partitions
+lsblk = list of block devices
+       -a, --all
+              Also list empty devices and RAM disk devices.
+
+       -b, -- Print bytes SIZE column in bytes rather
+               the  than in a human-readable format.
+
+       -D, --discard
+              Print information about the discarding capabilities (TRIM, UNMAP) for each device.
+
+       -d, --nodeps
+              Do not print holder devices or slaves.  For example, lsblk --nodeps /dev/sda prints information about the sda device only.
+
+       -E, --dedup column
+              Use column as a de-duplication key to de-duplicate output tree. If the key is not available for the device, or the device is a partition and parental whole-disk device provides the  same  key
+              than the device is always printed.
+
+              The usual use case is to de-duplicate output on system multi-path devices, for example by -E WWN.
+
+       -e, --exclude list
+              Exclude  the devices specified by the comma-separated list of major device numbers.  Note that RAM disks (major=1) are excluded by default if --all is not specified.  The filter is applied to
+              the top-level devices only. This may be confusing for --list output format where hierarchy of the devices is not obvious.
+
+       -f, --fs
+              Output info about filesystems.  This option is equivalent to -o NAME,FSTYPE,LABEL,UUID,MOUNTPOINT.  The authoritative information about filesystems and raids is provided by the blkid(8)  com‐
+              mand.
+
+grep = searches a file with particular pattern [grep ]
+   -c : This prints only a count of the lines that match a pattern
+   -h : Display the matched lines, but do not display the filenames.
+   -i : Ignores, case for matching
+   -l : Displays list of a filenames only.
+   -n : Display the matched lines and their line numbers.
+   -v : This prints out all the lines that do not matches the pattern
+   -e exp : Specifies expression with this option. Can use multiple times.
+   -f file : Takes patterns from file, one per line.
+   -E : Treats pattern as an extended regular expression (ERE)
+   -w : Match whole word
+   -o : Print only the matched parts of a matching line, with each such part on a separate output line.
+    -A n : Prints searched line and nlines after the result.
+    -B n : Prints searched line and n line before the result.
+    -C n : Prints searched line and n lines after before the result.
+
+sudo fdisk -l 
+fdisk 
+gdisk 
+parted
+
+fdisk is legacy based 
+primary - 1 to 4
+logical - higher than 5
+
+
+gdisk is modern system
+sudo gdisk directory path
+gdisk -help
+
+
+parted need to be installed
+parted -help
+
+Link. The file that follows the -> symbol is the target of the
+link  
+
+umask for directory 777-022= 755
+umask for file 666-022= 644
+
+grep ,pipe, cut
+ sar(1), pidstat(1), iostat(1), vmstat(8)
+
+ scp & sftp
+ ps 
+
+Ctrl-c - Kill the foreground process.
+Ctrl-z - Suspend the foreground process.
+bg [%num] - Background a suspended process.
+fg [%num] - Foreground a background process.
+kill [%num] - Kill a process by job number or PID.
+jobs [%num] - List jobs.

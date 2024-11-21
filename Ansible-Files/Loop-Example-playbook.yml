@@ -1,0 +1,12 @@
+- name: Install multiple packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - vim
+        - git
+        - wget

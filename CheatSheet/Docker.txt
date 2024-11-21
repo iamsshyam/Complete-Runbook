@@ -1,0 +1,60 @@
+# Docker #
+docker ps - List running containers.
+docker images - List all Docker images on the host.
+docker run -d -p <host-port>:<container-port> <image> - Run a container in detached mode and map ports.
+docker exec -it <container-id> /bin/bash - Run a shell inside a running container.
+docker logs <container-id> - Display logs from a running container.
+docker build -t <image-name> . - Build a Docker image from a Dockerfile.
+docker stop <container-id> - Stop a running container.
+docker rm <container-id> - Remove a stopped container.
+docker rmi <image-id> - Remove an image from the local repository.
+docker-compose up -d - Run services defined in docker-compose.yml in detached mode.
+docker pull <image> - Download an image from a registry.
+docker tag <image-id> <new-image-name> - Tag an image with a new name.
+docker network ls - List all Docker networks.
+docker network create <network-name> - Create a custom Docker network.
+docker network inspect <network-name> - Display details of a Docker network.
+docker volume ls - List all Docker volumes.
+docker volume create <volume-name> - Create a new volume.
+docker volume inspect <volume-name> - Inspect a specific volume.
+docker stats - Display real-time statistics for running containers.
+docker system prune -a - Remove unused data including images, containers, and networks.
+docker inspect <container-id> - Retrieve detailed information about a container in JSON format.
+docker exec -it <container-id> /bin/sh -c "<command>" - Run an advanced command inside a container.
+docker build --no-cache -t <image-name> . - Build an image without using cache to ensure freshness.
+docker-compose logs -f - Tail logs for all containers in a Docker Compose setup.
+docker system df - Display disk usage by Docker data.
+docker export <container-id> | tar -xvf - -C <path> - Export a container’s filesystem as a tar archive.
+docker update --restart=always <container-id> - Update a container to always restart.
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock <image> docker ps - Use Docker inside Docker.
+docker network connect <network-name> <container-id> - Connect a container to an existing network.
+docker save <image-name> -o <output-file>.tar - Save an image to a tar archive.
+
+docker run -it -d <image name>
+docker exec -it <container id> bash
+docker ps -a
+docker ps
+docker run -d -p 8080:8080 
+docker container ls 
+docker ls -a 
+docker run -d 
+docker run -it /bin/bash
+docker container export
+docker image inspect --format='' expose-demo 
+docker run -it expose-demo bash
+
+docker container ls cmd
+docker container ls -a cmd
+docker container run -d cmd -- docker container -d ubuntu sleep 30
+docker container run -it ubuntu cmd 
+docker container run -it ubuntu /bin/bash -- get in a container
+
+docker container wait -- exit -0
+docker container prune -f(yes prompt)
+docker diff and copy
+docker export/import image
+docker image save -- saves layers
+docker container export -- save running container image save without layers without volume mounted
+docker image load -- all logs name repo tags
+docker image import -- single layer
+EXPOSE port in dockerfile [EXPOSE 80/tcp EXPOSE 80/udp]

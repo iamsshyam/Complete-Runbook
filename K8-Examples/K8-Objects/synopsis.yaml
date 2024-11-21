@@ -1,0 +1,13 @@
+
+# apiVersion: Specifies the Kubernetes API version used for the object.
+# kind: Defines the type of Kubernetes object being created or modified.
+# metadata: Contains information about the object.
+# spec: Defines the desired state of the object, including its configuration and behavior.
+#        Under spec, there could be many subfields depending on the object type.
+
+apiVersion: <API version>
+kind: <Kind of object>
+metadata:
+  name:  <Name of the object>
+spec:
+  <Specification of the object>>

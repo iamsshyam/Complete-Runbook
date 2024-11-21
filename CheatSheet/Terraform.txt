@@ -1,0 +1,31 @@
+# Terraform #
+terraform init - Initialize a Terraform working directory.
+terraform plan - Create an execution plan showing what will be applied.
+terraform apply - Apply the changes required to reach the desired state.
+terraform destroy - Destroy the Terraform-managed infrastructure.
+terraform show - Display the state or a plan file.
+terraform validate - Validate the Terraform files for syntax errors.
+terraform fmt - Format Terraform code to canonical format.
+terraform state list - List all resources in the current state.
+terraform import <resource> <id> - Import existing infrastructure into Terraform.
+terraform output - Display outputs defined in the configuration.
+terraform graph | dot -Tsvg > graph.svg - Visualize the dependency graph as an SVG.
+terraform state show <resource> - Show attributes of a resource in the state.
+terraform taint <resource> - Mark a resource for recreation during the next apply.
+terraform untaint <resource> - Remove the taint from a resource.
+terraform state rm <resource> - Remove a resource from the Terraform state.
+terraform workspace list - List all workspaces in the current project.
+terraform workspace select <workspace> - Switch to a specific workspace.
+terraform refresh - Update the state file with the real infrastructure.
+terraform force-unlock <lock-id> - Manually unlock the state if stuck.
+terraform state mv <source> <destination> - Move a resource in the state.
+terraform apply -auto-approve - Run apply without manual approval.
+terraform apply -target=<resource> - Apply changes to a specific resource only.
+terraform workspace new <workspace-name> - Create a new workspace for environment isolation.
+terraform plan -out=<plan-file> - Save an execution plan to a file for later use.
+terraform show <plan-file> - Display the details of a saved plan.
+terraform plan -detailed-exitcode - Return a 0 for no changes, 1 for errors, and 2 if there are changes.
+terraform state pull > state.tfstate - Pull and save the current state file.
+terraform state push state.tfstate - Push an updated state file to remote storage.
+terraform taint <resource> && terraform apply - Force the recreation of a resource.
+TF_LOG=TRACE terraform apply - Run Terraform with detailed debugging output.

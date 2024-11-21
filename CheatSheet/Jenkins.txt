@@ -1,0 +1,120 @@
+Jenkins Master Slave setup 
+https://www.linkedin.com/pulse/configure-jenkins-master-slave-architecture-aws-soumya-sen 
+
+Configure Jenkins Master -
+
+1. Launch EC2 instance 1 in terminal.
+
+2. Ubuntu uses apt-get to install packages. First user needs to update the apt-get once the instance is launched.
+
+ $sudo apt-get update
+
+3. Install Java. Java will be required to run the Jenkins.
+
+ $sudo apt-get install -y openjdk-8-jdk
+
+3. Ubuntu will use jenkins debian package. To use this repository first user needs to add the key in the system
+
+ $sudo wget -q -O — https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+ you will get a message OK if it’s successfully added.
+
+4. Then user has top add the entry of debian binary in source.list
+
+ $sudo sh -c ‘echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list’
+
+5. Once this entry has been added apt-get needs to be updated again.
+
+ $sudo apt-get update
+
+6. Now user can install jenkins
+
+ $sudo apt-get install -y jenkins
+
+ This will install the jenkins in the system.
+
+7. Verify the installation by checking the status of jenkins service after installation. It should be active.
+
+ $service jenkins status
+
+8. If jenkins is successfully installed now open the url of the ec2 instance in host browser
+
+ http://<ip_of_ec2Instance>:8080
+
+ you will get the following screen to be opened
+
+9. The Administrator password will be stored in </var/lib/jenkins/secrets/initialAdminPassword > path of Jenkins master machine. Copy the password and paste it here complete the setup with default options.
+
+10. Once Jenkins server is successfully configured then click on Manage Jenkins.
+
+11. Then move to Configure Global Security.
+
+12. Select option Random for the settings of Security port for inbound agents. And save the settings.
+
+13. Now go to Manage Nodes and Clouds section under Manage Jenkins.
+
+14. Click on New Node and give the name of the node (ex. Slave-1) and select the Permanent Agent option and click on OK
+
+15. Now in the node configuration in the Remote root directory give a valid path of the slave machine. At the time of executions workspace will be created inside this directory (ex. /home/ubuntu/Jenkins).
+
+16. Select the launch method as Launch agent by connecting it to the master.
+
+17. Click on Save and that’s it. Jenkins master configuration is done. Now you can see the list of nodes like the following. There will red cross mark for the slave node as the node has not been configured yet.
+
+
+
+18. Click on the slave node. There you will get the link to download two important files which will be required for configuring the slave. 1. agent.jar, 2. Slave-agent.jnlp
+
+ Also note down the first command mentioned under Run from agent command line section
+
+
+
+
+
+Configure Jenkins slave -
+
+1. Launch the second EC2 instance.
+
+2. First user needs to update the apt-get once the instance is launched.
+
+ $sudo apt-get update
+
+3. Install Java. Java will be required to run the jar file which will configure the system as Jenkins slave.
+
+ $sudo apt-get install -y openjdk-8-jdk
+
+4. Copy the downloaded file to the slave instance. You can use file transfer tools like FileZilla or also can use terminal in case of mac or linux host machine (ex. sudo scp -i </Path_to_awsKey/Key_Name.pem> </path_of_source_file> ec2-user@ec2-ip_of_ec2.compute-1.amazonaws.com:~/path_in_slave_instance)
+
+5. Navigate to directory in slave machine where files are copied and run the command copied in the step 19 of the previous section. This will configure the instance as Jenkins slave machine and will show the message Connected.
+
+
+
+6. That’s it. Jenkins node has been successfully configured. To verify open the browser tab in the host machine where Jenkins is opened and go to the nodes section. You will observe that node machine is listed there and also the red cross mark on it is no longer visible.
+
+
+Setup a periodic cron based job: 
+A scheduling entry consists of five whitespace-separated fields. You can schedule a job for more than one time by adding more than one entry.
+
+Each field can contain an exact value or use a set of special expressions:
+
+The familiar asterisk * indicates all valid values. So, a job that runs every day has a * in the third field.
+
+A dash separates ranges of values. For example, a job that runs every hour from 9:00 a.m. to 5:00 p.m. would have 9-17 in the second field.
+
+Intervals are specified with a slash /. A job that runs every 15 minutes has H/15 in the first field. Note that the H in the first field has a special meaning. If you wanted a job to run every 15 minutes, you could configure it as 0/15, which would make it run at the start of every hour. However, if you configure too many jobs this way, you can overload your Jenkins controller. Ultimately, the H tells Jenkins to pick a minute based on a hash of the job name. 
+
+Finally, you can specify multiple values with a comma. So, a job that runs Monday, Wednesday, and Friday would have 1,3,5 in the fifth field.
+
+Jenkins provides a few examples in their help section for scheduling.
+
+# Every fifteen minutes (perhaps at :07, :22, :37, :52):
+H/15 * * * *
+# Every ten minutes in the first half of every hour (three times, perhaps at :04, :14, :24):
+H(0-29)/10 * * * *
+# Once every two hours at 45 minutes past the hour starting at 9:45 AM and finishing at 3:45 PM every weekday:
+45 9-16/2 * * 1-5
+# Once in every two hour slot between 8 AM and 4 PM every weekday (perhaps at 9:38 AM, 11:38 AM, 1:38 PM, 3:38 PM):
+H H(8-15)/2 * * 1-5
+# Once a day on the 1st and 15th of every month except December:
+H H 1,15 1-11 *
+Jenkins also has a set of aliases that makes using common intervals

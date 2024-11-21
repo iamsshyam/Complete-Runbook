@@ -1,0 +1,74 @@
+#Storage Class
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-gp2
+provisioner: kubernetes.io/aws-ebs #mention the provisioner
+parameters:
+  type: gp2
+  fsType: ext4
+  encrypted: "true"
+reclaimPolicy: Retain
+
+---
+
+#PV 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: trade-audit-pv
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ebs-gp2 # mention the storage class name
+  awsElasticBlockStore:
+    volumeID: <aws-volume-id> # Replace with actual EBS volume ID if pre-existing
+    fsType: ext4
+
+#PVC
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: trade-audit-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: ebs-gp2
+
+---
+
+#Deployment binds the pvc to pv
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-logging-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audit-logging
+  template:
+    metadata:
+      labels:
+        app: audit-logging
+    spec:
+      containers:
+        - name: audit-logging-container
+          image: mybank/audit-logging:1.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /var/log/audit
+              name: audit-storage
+      volumes:
+        - name: audit-storage
+          persistentVolumeClaim:
+            claimName: trade-audit-pvc
+

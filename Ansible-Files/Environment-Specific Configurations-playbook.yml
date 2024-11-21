@@ -1,0 +1,32 @@
+# Environment-Specific Configurations
+- name: Deploy sample application
+  hosts: app_servers
+  become: yes
+  vars:
+    app_env: "production"
+    app_src_dir: "/local/path/to/app"
+    app_dest_dir: "/var/www/html/app"
+
+  tasks:
+    - name: Copy application files
+      copy:
+        src: "{{ app_src_dir }}/"
+        dest: "{{ app_dest_dir }}"
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        recurse: yes
+
+    - name: Deploy environment-specific configuration
+      template:
+        src: templates/config_{{ app_env }}.j2
+        dest: "{{ app_dest_dir }}/config.yaml"
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Start application service
+      service:
+        name: app_service
+        state: restarted
+        enabled: true

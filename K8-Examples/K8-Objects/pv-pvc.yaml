@@ -1,0 +1,59 @@
+# Define PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-app-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data"  # Local path on the node (use other provisioners for production)
+
+---
+
+# Define PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-app-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: manual
+
+---
+
+# Define Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: nginx  # Simple web server image
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"  # Mount path in container
+          name: storage  # Volume reference name
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: my-app-pvc  # Reference to the PVC defined above

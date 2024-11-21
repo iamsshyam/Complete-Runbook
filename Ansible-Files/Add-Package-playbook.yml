@@ -1,0 +1,39 @@
+- name: Install Packages
+  hosts: localhost # can specify as per inventory
+  become: yes
+  vars:
+
+  tasks: 
+    - name: Install Apache
+      yum: 
+        name: httpd
+        state: present
+        enabled: true
+        
+    -  name: Install Apache in apt
+       apt:
+        name: apache
+        state: present
+        enabled: true
+
+    - name: Copy Application File # Copy Module
+      copy:
+        src:
+        dest:
+        
+    - name: Run Shell script # Shell Module
+      command: sh script.sh
+
+    - name: Create devuser # User module 
+      user:
+        name: devuser
+        state: present
+        groups: wheel
+        append: yes
+
+    - name: Update packages #Update multiple packages
+      yum:
+        name:
+          - httpd
+          - php
+        state: latest

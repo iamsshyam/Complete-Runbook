@@ -1,0 +1,64 @@
+# Kubernetes #
+
+kubectl get pods - List all pods in the current namespace.
+kubectl describe pod <pod-name> - Show detailed information about a specific pod.
+kubectl logs <pod-name> - Fetch logs from a specific pod.
+kubectl exec -it <pod-name> -- /bin/bash - Access a running pod's shell interactively.
+kubectl apply -f <filename>.yaml - Apply a configuration from a YAML file.
+kubectl delete pod <pod-name> - Delete a specific pod.
+kubectl get services - List all services in the current namespace.
+kubectl scale deployment <deployment-name> --replicas=<number> - Scale a deployment up or down.
+kubectl get nodes - Display the list of nodes in the cluster.
+kubectl port-forward <pod-name> <local-port>:<pod-port> - Forward a local port to a port on the pod.
+kubectl get all - Display all resources (pods, services, etc.) in the current namespace.
+kubectl rollout restart deployment <deployment-name> - Restart a deployment.
+kubectl top pod - Display resource (CPU/memory) usage of pods.
+kubectl top node - Display resource (CPU/memory) usage of nodes.
+kubectl get events --sort-by=.metadata.creationTimestamp - List cluster events in chronological order.
+kubectl label pod <pod-name> key=value - Add or update a label on a pod.
+kubectl annotate pod <pod-name> key=value - Add or update an annotation on a pod.
+kubectl config get-contexts - List all configured contexts.
+kubectl config use-context <context-name> - Switch to a specific context.
+kubectl cp <source> <pod-name>:<destination> - Copy a file or directory to/from a container.
+kubectl auth can-i <verb> <resource> --as=<user> - Check if a user can perform a specific action.
+kubectl edit <resource-type> <resource-name> - Open an editor to modify a resource in real-time.
+kubectl patch <resource-type> <resource-name> --patch '<json-patch>' - Update a resource using a JSON patch.
+kubectl get pod -o jsonpath='{.items[*].metadata.name}' - Extract specific fields from a JSON response.
+kubectl rollout undo deployment/<deployment-name> - Roll back to a previous version of a deployment.
+kubectl drain <node-name> --ignore-daemonsets - Safely evict all pods from a node.
+kubectl cordon <node-name> - Mark a node as unschedulable.
+kubectl taint nodes <node-name> key=value - Apply a taint to a node to control pod scheduling.
+kubectl port-forward service/<service-name> <local-port>:<service-port> - Port-forward a service.
+kubectl get resources -A --sort-by=.spec.replicas - List all resources sorted by the number of replicas.
+
+# Helm #
+helm repo update - Update information of available charts locally.
+helm install <release-name> <chart-name> - Install a new Helm chart.
+helm list - List all installed Helm releases.
+helm upgrade <release-name> <chart-name> - Upgrade an existing Helm release.
+helm uninstall <release-name> - Uninstall a Helm release.
+helm status <release-name> - Check the status of a deployed Helm release.
+helm rollback <release-name> <revision-number> - Roll back to a specific revision.
+helm show values <chart-name> - Display the default values of a Helm chart.
+helm template <chart-name> - Render a chart locally and output the result.
+helm get all <release-name> - Fetch all information about a release.
+helm repo add <repo-name> <repo-url> - Add a new Helm chart repository.
+helm dep update - Update dependencies for a given chart.
+helm diff upgrade <release-name> <chart-name> - Show what a Helm upgrade would change.
+helm test <release-name> - Run tests for a deployed release.
+helm lint <chart-name> - Run a lint check on a chart to find issues.
+helm create <chart-name> - Create a new chart with a basic directory structure.
+helm package <chart-path> - Package a chart into a versioned archive file.
+helm pull <chart-name> --untar - Download a chart and extract it locally.
+helm plugin list - List installed Helm plugins.
+helm plugin install <plugin-url> - Install a Helm plugin from a URL or local path.
+helm install <release-name> <chart-name> --values <values-file>.yaml - Install a release with custom values.
+helm upgrade <release-name> <chart-name> --reuse-values - Upgrade a release while reusing existing values.
+helm upgrade --install <release-name> <chart-name> - Upgrade a release if it exists or install it if it doesn’t.
+helm rollback <release-name> --force - Force rollback to a specific release version.
+helm get manifest <release-name> - Get the manifest of a release.
+helm dependency list <chart-name> - List dependencies of a Helm chart.
+helm dependency build <chart-name> - Build the dependencies for a chart.
+helm test <release-name> --logs - Run tests for a release and display logs.
+helm repo update && helm search repo <chart-name> - Update repos and search for a chart.
+helm template <chart-name> -f <values-file>.yaml | kubectl apply -f - - Render templates with values and apply directly.

@@ -1,0 +1,21 @@
+- name: Deploy SSH key for devuser
+  hosts: all
+  become: yes
+  vars:
+    ssh_key: "ssh-rsa AAAAB3... rest_of_the_key ... user@host"
+  tasks:
+    - name: Add SSH key
+      authorized_key:
+        user: devuser
+        key: "{{ ssh_key }}"
+        state: present
+
+- name: Deploy SSH key for devuser
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add SSH key
+      authorized_key:
+        user: devuser
+        key: "{{ lookup('file', '/path/to/ssh_key.pub') }}"
+        state: present

@@ -1,0 +1,58 @@
+- name: Check and create file if not exists
+  hosts: all
+  tasks:
+    - name: Check if file exists
+      stat:
+        path: /etc/example.conf
+      register: file_check
+
+    - name: Create file if it does not exist
+      file:
+        path: /etc/example.conf
+        state: touch
+      when: not file_check.stat.exists
+
+
+#Example
+
+    - name: Install Apache
+      yum:
+        name: httpd
+        state: present
+      register: apache_install
+
+    - name: Start Apache if installation succeeded
+      service:
+        name: httpd
+        state: started
+      when: apache_install.changed
+
+    - name: Display basic system information
+      debug:
+        msg:
+          - "Operating System: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Memory: {{ ansible_memtotal_mb }} MB"
+          - "IP Address: {{ ansible_default_ipv4.address }}"
+
+    - name: Check system uptime
+      command: uptime
+      register: uptime_output  # Register command output
+
+    - name: Display system uptime
+      debug:
+        msg: "System uptime: {{ uptime_output.stdout }}"  # Access the registered variable
+
+    - name: Check if /etc/passwd file exists
+      stat:
+        path: /etc/passwd
+      register: passwd_file_stat  # Register stat output
+
+    - name: Display if /etc/passwd exists
+      debug:
+        msg: "File /etc/passwd exists: {{ passwd_file_stat.stat.exists }}"
+
+    - name: Create a backup if /etc/passwd exists
+      copy:
+        src: /etc/passwd
+        dest: /tmp/passwd_backup
+      when: passwd_file_stat.stat.exists  # Condition based on file existence

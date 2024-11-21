@@ -1,0 +1,17 @@
+- name: Deploy SSH keys for multiple users
+  hosts: all
+  become: yes
+  vars:
+    users:
+      - name: devuser
+        key_path: "files/devuser_key.pub"
+      - name: testuser
+        key_path: "files/testuser_key.pub"
+
+  tasks:
+    - name: Add SSH keys for users
+      authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ lookup('file', item.key_path) }}"
+        state: present
+      loop: "{{ users }}"
