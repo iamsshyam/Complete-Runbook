@@ -31,6 +31,23 @@ kubectl taint nodes <node-name> key=value - Apply a taint to a node to control p
 kubectl port-forward service/<service-name> <local-port>:<service-port> - Port-forward a service.
 kubectl get resources -A --sort-by=.spec.replicas - List all resources sorted by the number of replicas.
 
+--- In k8s version 1.19+, we can specify the --replicas option to create a deployment with 4 replicas. ---
+kubectl create deployment --image=kodekloud/webapp-color webapp --replicas=3 --dry-run=client -o yaml > nginx-deployment.yaml
+
+kubectl create deployment --image=nginx blue --replicas=3
+
+kubectl create pod --image=redis redis --namespace=finance --dry-run=client -o yaml > pod-definition.yaml
+
+kubectl run redis -l tier=db --image=redis:alpine # redis pod using the redis:alpine image with the labels set to tier=db.
+
+Create a pod called httpd using the image httpd:alpine in the default namespace. Next, create a service of type ClusterIP by the same name (httpd). 
+The target port for the service should be 80
+
+kubectl run httpd --image=httpd:alpine --port=80 --expose
+
+kubectl taint nodes node01 spray=mortein:NoSchedule #a taint on node01 with key of spray, value of mortein and effect of NoSchedule
+
+https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands 
 # Helm #
 helm repo update - Update information of available charts locally.
 helm install <release-name> <chart-name> - Install a new Helm chart.

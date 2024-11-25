@@ -6,6 +6,20 @@ metadata:
     name: first-pod-label
 spec:
   - name: first-pod
-  image: hello-world
-  ports:
-    - containerPort: 8080
+    image: hello-world
+    ports:
+      - containerPort: 8080
+
+
+---
+
+# apiVersion: v1
+# kind: Pod
+metadata:
+  name: ngnix
+spec:
+  containers:
+    - name: ngnix
+      image: ngnix
+      ports:
+        - containerPort: 8080

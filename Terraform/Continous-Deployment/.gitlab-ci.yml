@@ -1,0 +1,91 @@
+# Optimized GitLab CI/CD pipeline for Terraform
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
+      when: never
+    - when: always
+
+# Define global variables
+variables:
+  TF_DIR: ${CI_PROJECT_DIR}/terraform              # Directory containing Terraform files
+  STATE_NAME: "tf_state_${ENVIRONMENT}"            # Unique state name per environment
+  ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_NAME}"
+  TERRAFORM_IMAGE: "hashicorp/terraform:light"
+
+# Caching for Terraform plugins and modules
+cache:
+  paths:
+    - .terraform/
+
+# Define pipeline stages
+stages:
+  - validate
+  - plan
+  - apply
+  - destroy
+
+# Define default image for all jobs
+default:
+  image: $TERRAFORM_IMAGE
+  before_script:
+    - terraform --version
+    - export GITLAB_ACCESS_TOKEN=$TOKEN
+    - cd ${TF_DIR}
+    - terraform init -reconfigure \
+        -backend-config="address=${ADDRESS}" \
+        -backend-config="lock_address=${ADDRESS}/lock" \
+        -backend-config="unlock_address=${ADDRESS}/lock" \
+        -backend-config="username=${GITLAB_USER_LOGIN}" \
+        -backend-config="password=$GITLAB_ACCESS_TOKEN" \
+        -backend-config="lock_method=POST" \
+        -backend-config="unlock_method=DELETE" \
+        -backend-config="retry_wait_min=5"
+drift-detection:
+  stage: validate
+  script:
+    
+  allow_failure: true
+
+# Validate Terraform configuration
+validate:
+  stage: validate
+  script:
+    - terraform validate
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "feature/*"
+
+# Plan Terraform changes
+plan:
+  stage: plan
+  script:
+    - terraform plan -detailed-exitcode #Detect drift early with a dedicated "drift detection" 
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - ${TF_DIR}/tfplan  # Store the plan file for use in apply stage
+  dependencies:
+    - validate
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "feature/*"
+
+# Apply Terraform changes
+apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve tfplan
+  dependencies:
+    - plan
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Destroy Terraform resources (manual approval)
+destroy:
+  stage: destroy
+  script:
+    - terraform destroy -auto-approve
+  dependencies:
+    - plan
+    - apply
+  when: manual
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"

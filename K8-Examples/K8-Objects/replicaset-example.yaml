@@ -17,3 +17,32 @@ spec:
             image: node-app:12
             ports:
              - containerPort: 8080
+
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  creationTimestamp: "2024-11-21T19:30:19Z"
+  generation: 1
+  name: new-replica-set
+  namespace: default
+  resourceVersion: "951"
+  uid: c7f899b1-22c2-4431-9863-2b7726282982
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      name: busybox-pod
+  template:
+    metadata:
+      labels:
+        name: busybox-pod
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - echo Hello Kubernetes! && sleep 3600
+        image: busybox
+        imagePullPolicy: Always
+        name: busybox-container

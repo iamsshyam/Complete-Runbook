@@ -60,3 +60,19 @@ spec:
     - protocol: TCP
       port: 80          # Port exposed by the load balancer
       targetPort: 80     # Port on the container
+
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+  namespace: default
+spec:
+  ports:
+  - nodePort: 30080
+    port: 8080
+    targetPort: 8080
+  selector:
+    name: simple-webapp
+  type: NodePort

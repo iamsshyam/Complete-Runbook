@@ -17,3 +17,120 @@ spec:
           image: nginx:1.7.9  # Docker image for the container
           ports:
             - containerPort: 80  # Port the container listens on
+
+---
+
+apiVersion: apps/v1
+kind: deployment
+metadata:
+  name: deployment-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: busybox-pod
+  template:
+    metadata:
+      labels:
+        name: busybox-pod
+    spec:
+      containers:
+      - name: busybox-container
+        image: busybox
+        command:
+        - sh
+        - "-c"
+        - echo Hello Kubernetes! && sleep 3600            
+
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-frontend
+spec:
+  replicaSet: 3
+  selector:
+    matchLabels:
+      app: httpd-frontend
+  template:
+    metadata:
+      labels:
+        app: httpd-frontend
+    spec:
+      containers:
+      - name: httpd-frontend
+        image: httpd:2.4-alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+# Name: httpd-frontend;
+# Replicas: 3;
+# Image: httpd:2.4-alpine
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-frontend
+  labels:
+    name: httpd-frontend
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels: 
+      name: httpd-frontend
+    spec:
+      containers:
+        - name: httpd-frontend
+          image: httpd:2.4-alpine
+          ports:
+            - containerPort: 8080
+  selector:
+    matchLabels:
+      name: httpd-frontend
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: httpd-frontend
+  template:
+    metadata:
+      labels:
+        name: httpd-frontend
+    spec:
+      containers:
+      - name: httpd-frontend
+        image: httpd:2.4-alpine
+
+---
+Name: webapp-service
+Type: NodePort
+targetPort: 8080
+port: 8080
+nodePort: 30080
+selector:
+  name: simple-webapp
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-serivce
+spec:
+  selector:
+    name: webapp-serivce
+  type: NodePort
+  ports:
+    - nodePort: 30080
+      targetPort: 8080
+      port: 8080       

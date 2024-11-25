@@ -1,0 +1,78 @@
+# Trigger rules: Pipeline runs only for specific branches
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" # Production branch
+      variables:
+        ENV: "prod"
+    - if: $CI_COMMIT_BRANCH =~ /^uat\/.*/ # UAT branches
+      variables:
+        ENV: "uat"
+    - if: $CI_COMMIT_BRANCH =~ /^dev\/.*/ # Development branches
+      variables:
+        ENV: "dev"
+    - when: never # Ignore other branches
+
+# Variables
+variables:
+  TF_DIR: "${CI_PROJECT_DIR}/terraform" # Path to Terraform configuration files
+  STATE_NAME: "tf_state_${ENV}"         # Unique state file per environment
+  ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_NAME}"
+
+# Stages
+stages:
+  - validate
+  - plan
+  - apply
+  - destroy
+
+# Use official Terraform Docker image
+image:
+  name: hashicorp/terraform:light
+  entrypoint: [""]
+
+# Common script executed before all stages
+before_script:
+  - terraform --version
+  - export GITLAB_ACCESS_TOKEN=$TOKEN
+  - cd ${TF_DIR} # Navigate to Terraform directory
+  - terraform init -reconfigure \
+      -backend-config="address=${ADDRESS}" \
+      -backend-config="lock_address=${ADDRESS}/lock" \
+      -backend-config="unlock_address=${ADDRESS}/lock" \
+      -backend-config="username=$CI_JOB_USERNAME" \
+      -backend-config="password=$GITLAB_ACCESS_TOKEN" \
+      -backend-config="retry_wait_min=5"
+
+# Validation Stage
+validate:
+  stage: validate
+  script:
+    - terraform validate # Validate the Terraform configuration
+
+# Plan Stage
+plan:
+  stage: plan
+  script:
+    - terraform plan -out=tfplan -state=${STATE_NAME} # Generate execution plan
+  artifacts:
+    paths:
+      - tfplan # Save the plan for the apply stage
+  dependencies:
+    - validate # Only proceed if validate passes
+
+# Apply Stage
+apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve tfplan # Apply changes based on the plan
+  dependencies:
+    - plan # Only proceed if plan succeeds
+
+# Destroy Stage (Manual Trigger)
+destroy:
+  stage: destroy
+  script:
+    - terraform destroy -auto-approve -state=${STATE_NAME} # Destroy resources for the state
+  dependencies:
+    - apply # Can only destroy after apply
+  when: manual # Requires manual approval to execute

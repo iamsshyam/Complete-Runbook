@@ -6,10 +6,10 @@ provider "aws" {
 # S3 bucket for state file
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "my-terraform-state-bucket"  # Replace with a unique bucket name
-  acl    = "private"
-
-  versioning {
-    enabled = true
+    lifecycle {
+    create_before_destroy = true
+    prevent_destroy = false
+    ignore_changes        = [tags]
   }
 }
 
