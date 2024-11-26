@@ -1,6 +1,6 @@
 - name: Install Packages
   hosts: localhost # can specify as per inventory
-  become: yes
+  become: yes # as root
   vars:
 
   tasks: 

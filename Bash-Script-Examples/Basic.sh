@@ -14,8 +14,11 @@ echo "Current Hostname: $(hostname)"
 # Print the current username
 echo "Current Username: $(whoami)"
 
+data=$(date +"%F")
+echo "--------------$data"
 
 #!/bin/bash
+
 
 # Print the current date in the desired format
 echo "Current Date: $(date '+%a, %b %d, %Y')"
