@@ -1,0 +1,4 @@
+Thank you for installing {{ .Chart.Name }}!
+
+You can access your application using the following URL:
+http://{{ .Values.ingress.hostname }}
